@@ -82,12 +82,13 @@ create table if not exists `carts`
 
 create table if not exists `orders`
 (
-    `id`         int auto_increment primary key,
-    `user_id`    int,
-    `payment_id` int,
-    `status`     varchar(30),
-    `created_at` timestamp default current_timestamp,
-    `updated_at` timestamp default current_timestamp on update current_timestamp
+    `id`          int auto_increment primary key,
+    `user_id`     int,
+    `payment_id`  int,
+    `total_price` int,
+    `status`      varchar(30),
+    `created_at`  timestamp default current_timestamp,
+    `updated_at`  timestamp default current_timestamp on update current_timestamp
 ) engine = InnoDB
   default charset = utf8mb4
   collate = utf8mb4_unicode_ci;
