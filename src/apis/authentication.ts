@@ -6,27 +6,27 @@ import {enrichUserRecords} from "./helpers.ts";
 import {generateJWTPayload} from "../utils/jwt.ts";
 
 export async function register(request: Request, response: Response) {
-    const registerData = request.body as RegisterRequest
-
-    // verify email
-    if (!isValidEmail(registerData.email)) {
-        response.status(StatusCodes.BAD_REQUEST).json({message: "email is invalid"})
-        return
-    }
-
-    // verify password constraints
-    if (!isValidPassword(registerData.password)) {
-        response.status(StatusCodes.BAD_REQUEST).json({message: "password is invalid"})
-        return
-    }
-
-    // verify username
-    if (registerData.username.length == 0) {
-        response.status(StatusCodes.BAD_REQUEST).json({message: "username is invalid"})
-        return
-    }
-
     try {
+        const registerData = request.body as RegisterRequest
+
+        // verify email
+        if (!isValidEmail(registerData.email)) {
+            response.status(StatusCodes.BAD_REQUEST).json({message: "email is invalid"})
+            return
+        }
+
+        // verify password constraints
+        if (!isValidPassword(registerData.password)) {
+            response.status(StatusCodes.BAD_REQUEST).json({message: "password is invalid"})
+            return
+        }
+
+        // verify username
+        if (registerData.username.length == 0) {
+            response.status(StatusCodes.BAD_REQUEST).json({message: "username is invalid"})
+            return
+        }
+
         // save information to database
         const user = enrichUserRecords(registerData)
         await user.save()
