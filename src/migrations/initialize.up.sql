@@ -140,16 +140,16 @@ CREATE TABLE `supplier`
 
 CREATE TABLE `users`
 (
-    `id`            int(11)                   NOT NULL,
-    `username`      varchar(50)               NOT NULL,
-    `password_hash` varchar(255)              NOT NULL,
-    `email`         varchar(100)              NOT NULL,
-    `full_name`     varchar(100)              NOT NULL,
-    `address`       text                      NOT NULL,
-    `phone_number`  varchar(12)               NOT NULL,
-    `role`          enum ('admin','customer') NOT NULL,
-    `create_at`     timestamp                 NOT NULL DEFAULT current_timestamp(),
-    `update_at`     timestamp                 NOT NULL DEFAULT current_timestamp()
+    `id`           int          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `username`     varchar(50)  NOT NULL,
+    `password`     varchar(255) NOT NULL,
+    `email`        varchar(100) NOT NULL,
+    `full_name`    varchar(100),
+    `address`      text,
+    `phone_number` varchar(12),
+    `role`         varchar(50),
+    `create_at`    timestamp    NOT NULL DEFAULT current_timestamp(),
+    `update_at`    timestamp    NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -271,12 +271,6 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT cho bảng `supplier`
 --
 ALTER TABLE `supplier`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `users`
---
-ALTER TABLE `users`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
