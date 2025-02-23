@@ -141,7 +141,7 @@ CREATE TABLE `supplier`
 CREATE TABLE `users`
 (
     `id`           int          NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `username`     varchar(50)  NOT NULL,
+    `username`     varchar(50)  NOT NULL UNIQUE,
     `password`     varchar(255) NOT NULL,
     `email`        varchar(100) NOT NULL,
     `full_name`    varchar(100),
