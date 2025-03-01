@@ -53,6 +53,27 @@ CREATE TABLE `categories`
   COLLATE = utf8mb4_general_ci;
 
 --
+-- Cấu trúc bảng cho bảng `products`
+--
+
+CREATE TABLE `products`
+(
+    `id`          int            NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`        varchar(50)    NOT NULL,
+    `image_url`   varchar(255)   NOT NULL,
+    `description` text           NOT NULL,
+    `price`       decimal(10, 2) NOT NULL,
+    `stock`       int(11)        NOT NULL,
+    `category_id` int(11)        NOT NULL,
+    `supplier_id` int(11)        NOT NULL,
+    `create_at`   timestamp      NOT NULL DEFAULT current_timestamp(),
+    `update_at`   timestamp      NOT NULL DEFAULT current_timestamp(),
+    `deleted_at`  timestamp               DEFAULT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+--
 -- Cấu trúc bảng cho bảng `carts`
 --
 
@@ -139,26 +160,6 @@ CREATE TABLE `payments`
   COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `products`
---
-
-CREATE TABLE `products`
-(
-    `id`          int(11)        NOT NULL,
-    `name`        varchar(50)    NOT NULL,
-    `image_url`   varchar(255)   NOT NULL,
-    `description` text           NOT NULL,
-    `price`       decimal(10, 2) NOT NULL,
-    `stock`       int(11)        NOT NULL,
-    `category_id` int(11)        NOT NULL,
-    `supplier_id` int(11)        NOT NULL,
-    `create_at`   timestamp      NOT NULL DEFAULT current_timestamp(),
-    `update_at`   timestamp      NOT NULL DEFAULT current_timestamp()
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
