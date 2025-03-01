@@ -13,6 +13,37 @@ tags:
   - name: Suppliers
     description: Everything about suppliers
 paths:
+  /suppliers:
+    post:
+      tags:
+        - Suppliers
+      description: Create or update a supplier
+      operationId: upsertSupplier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Supplier"
+              required:
+                - name
+                - phoneNumber
+                - email
+                - address
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
+
   /suppliers/get:
     post:
       tags:
@@ -69,6 +100,35 @@ paths:
                       pageSize:
                         type: number
                         description: number of items per page
+
+  /suppliers/{supplierId}:
+    delete:
+      tags:
+        - Suppliers
+      description: Soft delete a supplier
+      operationId: deleteSupplier
+      parameters:
+        - name: supplierId
+          in: path
+          description: supplierId to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
 
 components:
   schemas:
