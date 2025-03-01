@@ -1,4 +1,43 @@
-CREATE TABLE `cart`
+--
+-- Cấu trúc bảng cho bảng `users`
+--
+
+CREATE TABLE `users`
+(
+    `id`           int          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `username`     varchar(50)  NOT NULL UNIQUE,
+    `password`     varchar(255) NOT NULL,
+    `email`        varchar(100) NOT NULL,
+    `full_name`    varchar(100),
+    `address`      text,
+    `phone_number` varchar(12),
+    `role`         varchar(50),
+    `created_at`    timestamp    NOT NULL DEFAULT current_timestamp(),
+    `updated_at`    timestamp    NOT NULL DEFAULT current_timestamp()
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+--
+-- Cấu trúc bảng cho bảng `supplier`
+--
+
+CREATE TABLE `suppliers`
+(
+    `id`           int          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`         varchar(50)  NOT NULL,
+    `phone_number` varchar(12)  NOT NULL,
+    `email`        varchar(100) NOT NULL,
+    `address`      text         NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+--
+-- Cấu trúc bảng cho bảng `carts`
+--
+
+CREATE TABLE `carts`
 (
     `id`         int(11)        NOT NULL,
     `user_id`    int(11)        NOT NULL,
@@ -117,42 +156,7 @@ CREATE TABLE `products`
 
 -- --------------------------------------------------------
 
---
--- Cấu trúc bảng cho bảng `supplier`
---
-
-CREATE TABLE `supplier`
-(
-    `id`           int(11)      NOT NULL,
-    `name`         varchar(50)  NOT NULL,
-    `phone_number` varchar(12)  NOT NULL,
-    `email`        varchar(100) NOT NULL,
-    `address`      text         NOT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
-
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `users`
---
-
-CREATE TABLE `users`
-(
-    `id`           int          NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `username`     varchar(50)  NOT NULL UNIQUE,
-    `password`     varchar(255) NOT NULL,
-    `email`        varchar(100) NOT NULL,
-    `full_name`    varchar(100),
-    `address`      text,
-    `phone_number` varchar(12),
-    `role`         varchar(50),
-    `created_at`    timestamp    NOT NULL DEFAULT current_timestamp(),
-    `updated_at`    timestamp    NOT NULL DEFAULT current_timestamp()
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -161,7 +165,7 @@ CREATE TABLE `users`
 --
 -- Chỉ mục cho bảng `cart`
 --
-ALTER TABLE `cart`
+ALTER TABLE `carts`
     ADD PRIMARY KEY (`id`),
     ADD KEY `product_id` (`product_id`),
     ADD KEY `user_id` (`user_id`);
@@ -209,17 +213,6 @@ ALTER TABLE `products`
     ADD KEY `category_id` (`category_id`),
     ADD KEY `supplier_id` (`supplier_id`);
 
---
--- Chỉ mục cho bảng `supplier`
---
-ALTER TABLE `supplier`
-    ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `users`
---
-ALTER TABLE `users`
-    ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
@@ -228,7 +221,7 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT cho bảng `cart`
 --
-ALTER TABLE `cart`
+ALTER TABLE `carts`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -268,19 +261,13 @@ ALTER TABLE `products`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT cho bảng `supplier`
---
-ALTER TABLE `supplier`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- Các ràng buộc cho các bảng đã đổ
 --
 
 --
 -- Các ràng buộc cho bảng `cart`
 --
-ALTER TABLE `cart`
+ALTER TABLE `carts`
     ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
     ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
@@ -309,5 +296,5 @@ ALTER TABLE `order_details`
 --
 ALTER TABLE `products`
     ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
-    ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`);
+    ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`);
 COMMIT;
