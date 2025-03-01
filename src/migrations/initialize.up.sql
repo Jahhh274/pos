@@ -12,8 +12,8 @@ CREATE TABLE `users`
     `address`      text,
     `phone_number` varchar(12),
     `role`         varchar(50),
-    `created_at`    timestamp    NOT NULL DEFAULT current_timestamp(),
-    `updated_at`    timestamp    NOT NULL DEFAULT current_timestamp()
+    `created_at`   timestamp    NOT NULL DEFAULT current_timestamp(),
+    `updated_at`   timestamp    NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -28,7 +28,9 @@ CREATE TABLE `suppliers`
     `name`         varchar(50)  NOT NULL,
     `phone_number` varchar(12)  NOT NULL,
     `email`        varchar(100) NOT NULL,
-    `address`      text         NOT NULL
+    `address`      text         NOT NULL,
+    `created_at`   timestamp    NOT NULL DEFAULT current_timestamp(),
+    `updated_at`   timestamp    NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;

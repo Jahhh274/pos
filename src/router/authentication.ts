@@ -1,8 +1,8 @@
 import {Router} from "express";
-import {register} from "../apis/authentication.ts";
+import {Handler} from "../apis/handler.ts";
 
-const authRouter = Router();
-
-authRouter.post("/register", register)
-
-export default authRouter;
+export function createAuthRouter(handler: Handler): Router {
+    const router = Router()
+    router.post("/register", (req, res) => handler.register(req, res))
+    return router
+}

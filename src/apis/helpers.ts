@@ -1,5 +1,5 @@
 import type { RegisterRequest } from "../interfaces/interfaces.ts";
-import { User } from "../repository/entities.ts";
+import {User} from "../repository/entities.ts";
 import {hashSHA256} from "../utils/hashing.ts";
 
 export function enrichUserRecords(data: RegisterRequest): User {
