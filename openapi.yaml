@@ -10,9 +10,101 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
     version: 1.0.11
 tags:
+  - name: Authentication
+    description: Everything about authentication
   - name: Suppliers
     description: Everything about suppliers
 paths:
+  /register:
+    post:
+      tags:
+        - Authentication
+      description: Register an account
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: username
+                password:
+                  type: string
+                  description: password
+                email:
+                  type: string
+                  description: email of user, required email or phoneNumber
+                phoneNumber:
+                  type: string
+                  description: phoneNumber of user, required email or phoneNumber
+              required:
+                - username
+                - password
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: authentication token
+
+  /login:
+    post:
+      tags:
+        - Authentication
+      description: Login
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: username
+                password:
+                  type: string
+                  description: password
+              required:
+                - username
+                - password
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: authentication token
+
   /suppliers:
     post:
       tags:
