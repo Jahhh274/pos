@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: POS
+  description:
+    POS's api documentation
+  contact:
+    email: ha.nt@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    version: 1.0.11
+tags:
+  - name: Suppliers
+    description: Everything about suppliers
+paths:
+  /suppliers/get:
+    post:
+      tags:
+        - Suppliers
+      description: Get information about suppliers
+      operationId: getSuppliers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: number
+                  description: list of supplier ids
+                name:
+                  type: string
+                  description: name of supplier
+                page:
+                  type: number
+                  description: page number for pagination
+                pageSize:
+                  type: number
+                  description: number of items per page
+              required:
+                - page
+                - pageSize
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
+                  data:
+                    type: object
+                    properties:
+                      suppliers:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Supplier"
+                      page:
+                        type: number
+                        description: page number for pagination
+                      pageSize:
+                        type: number
+                        description: number of items per page
+
+components:
+  schemas:
+    Supplier:
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of supplier
+        name:
+          type: string
+          description: name of supplier
+        phoneNumber:
+          type: string
+          description: phoneNumber of supplier
+        email:
+          type: string
+          description: email of supplier
+        address:
+          type: string
+          description: address of supplier
