@@ -30,7 +30,24 @@ CREATE TABLE `suppliers`
     `email`        varchar(100) NOT NULL,
     `address`      text         NOT NULL,
     `created_at`   timestamp    NOT NULL DEFAULT current_timestamp(),
-    `updated_at`   timestamp    NOT NULL DEFAULT current_timestamp()
+    `updated_at`   timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `deleted_at`   timestamp             DEFAULT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
+--
+-- Cấu trúc bảng cho bảng `categories`
+--
+
+CREATE TABLE `categories`
+(
+    `id`          int         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`        varchar(50) NOT NULL,
+    `description` text        NOT NULL,
+    `created_at`  timestamp   NOT NULL DEFAULT current_timestamp(),
+    `updated_at`  timestamp   NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `deleted_at`  timestamp            DEFAULT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -51,19 +68,6 @@ CREATE TABLE `carts`
   COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `categories`
---
-
-CREATE TABLE `categories`
-(
-    `id`          int(11)     NOT NULL,
-    `name`        varchar(50) NOT NULL,
-    `description` text        NOT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
