@@ -524,6 +524,7 @@ paths:
                         type: integer
                         format: int32
                         description: id of coupon
+
   /coupons/get:
     post:
       tags:

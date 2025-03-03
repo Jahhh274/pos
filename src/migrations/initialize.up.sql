@@ -68,7 +68,11 @@ CREATE TABLE `products`
     `supplier_id` int(11)        NOT NULL,
     `create_at`   timestamp      NOT NULL DEFAULT current_timestamp(),
     `update_at`   timestamp      NOT NULL DEFAULT current_timestamp(),
-    `deleted_at`  timestamp               DEFAULT NULL
+    `deleted_at`  timestamp               DEFAULT NULL,
+    INDEX         `idx_category_id` (`category_id`),
+    INDEX         `idx_supplier_id` (`supplier_id`),
+    CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_products_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -88,7 +92,9 @@ CREATE TABLE `coupons`
     `product_id`    int(11)       NOT NULL,
     `create_at`     timestamp     NOT NULL DEFAULT current_timestamp(),
     `update_at`     timestamp     NOT NULL DEFAULT current_timestamp(),
-    `deleted_at`    timestamp              DEFAULT NULL
+    `deleted_at`    timestamp              DEFAULT NULL,
+    INDEX           `idx_product_id` (`product_id`),
+    CONSTRAINT `fk_coupons_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -180,19 +186,6 @@ ALTER TABLE `carts`
     ADD KEY `user_id` (`user_id`);
 
 --
--- Chỉ mục cho bảng `categories`
---
-ALTER TABLE `categories`
-    ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `coupons`
---
-ALTER TABLE `coupons`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `product_id` (`product_id`);
-
---
 -- Chỉ mục cho bảng `orders`
 --
 ALTER TABLE `orders`
@@ -214,29 +207,11 @@ ALTER TABLE `order_details`
 ALTER TABLE `payments`
     ADD PRIMARY KEY (`id`);
 
---
--- Chỉ mục cho bảng `products`
---
-ALTER TABLE `products`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `category_id` (`category_id`),
-    ADD KEY `supplier_id` (`supplier_id`);
-
-
---
--- AUTO_INCREMENT cho các bảng đã đổ
---
 
 --
 -- AUTO_INCREMENT cho bảng `cart`
 --
 ALTER TABLE `carts`
-    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `categories`
---
-ALTER TABLE `categories`
     MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -270,21 +245,11 @@ ALTER TABLE `products`
     MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
--- Các ràng buộc cho các bảng đã đổ
---
-
---
 -- Các ràng buộc cho bảng `cart`
 --
 ALTER TABLE `carts`
     ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
     ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
---
--- Các ràng buộc cho bảng `coupons`
---
-ALTER TABLE `coupons`
-    ADD CONSTRAINT `coupons_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Các ràng buộc cho bảng `orders`
@@ -299,11 +264,3 @@ ALTER TABLE `orders`
 ALTER TABLE `order_details`
     ADD CONSTRAINT `order_details_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
     ADD CONSTRAINT `order_details_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
-
---
--- Các ràng buộc cho bảng `products`
---
-ALTER TABLE `products`
-    ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
-    ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`);
-COMMIT;
