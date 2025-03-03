@@ -120,11 +120,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Supplier"
-              required:
-                - name
-                - phoneNumber
-                - email
-                - address
       responses:
         "200":
           description: "Successful response"
@@ -244,9 +239,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Category"
-              required:
-                - name
-                - description
       responses:
         "200":
           description: "Successful response"
@@ -367,14 +359,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Product"
-              required:
-                - name
-                - imageUrl
-                - description
-                - price
-                - stock
-                - categoryId
-                - supplierId
       responses:
         "200":
           description: "Successful response"
