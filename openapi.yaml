@@ -18,6 +18,8 @@ tags:
     description: Everything about product's categories
   - name: Products
     description: Everything about products
+  - name: Coupons
+    description: Everything about coupons
 paths:
   /register:
     post:
@@ -490,6 +492,139 @@ paths:
                     type: string
                     description: message from server
 
+  /coupons:
+    post:
+      tags:
+        - Coupons
+      description: Create or update a coupon
+      operationId: upsertCoupon
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Coupon"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                        description: id of coupon
+  /coupons/get:
+    post:
+      tags:
+        - Coupons
+      description: Get information about coupons
+      operationId: getCoupons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int32
+                  description: list of coupon ids
+                name:
+                  type: string
+                  description: name of coupon
+                startDate:
+                  type: integer
+                  format: int32
+                  description: filter coupon that have startDate >= filter value
+                endDate:
+                  type: integer
+                  format: int32
+                  description: filter coupon that have endDate <= filter value
+                productIds:
+                  type: array
+                  items:
+                    type: integer
+                    format: int32
+                  description: list of product ids
+                page:
+                  type: number
+                  description: page number for pagination
+                pageSize:
+                  type: number
+                  description: number of items per page
+              required:
+                - page
+                - pageSize
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
+                  data:
+                    type: object
+                    properties:
+                      coupons:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Coupon"
+                      page:
+                        type: number
+                        description: page number for pagination
+                      pageSize:
+                        type: number
+                        description: number of items per page
+
+  /coupons/{couponId}:
+    delete:
+      tags:
+        - Coupons
+      description: Soft delete a coupon
+      operationId: deleteCoupon
+      parameters:
+        - name: couponId
+          in: path
+          description: couponId to delete
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: response code
+                  message:
+                    type: string
+                    description: message from server
+
 components:
   schemas:
     Supplier:
@@ -555,3 +690,29 @@ components:
           type: integer
           format: int32
           description: id of supplier
+    Coupon:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: id of coupon
+        name:
+          type: string
+          description: name of coupon
+        discountRate:
+          type: number
+          format: double
+          description: discountRate of coupon
+        startDate:
+          type: integer
+          format: int32
+          description: start timestamp that this coupon is applied
+        endDate:
+          type: integer
+          format: int32
+          description: end timestamp that this coupon is applied
+        productId:
+          type: integer
+          format: int32
+          description: id of product that this coupon is applied

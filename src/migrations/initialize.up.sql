@@ -73,6 +73,26 @@ CREATE TABLE `products`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
 
+
+--
+-- Cấu trúc bảng cho bảng `coupons`
+--
+
+CREATE TABLE `coupons`
+(
+    `id`            int           NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`          varchar(50)   NOT NULL,
+    `discount_rate` decimal(5, 2) NOT NULL,
+    `start_date`    timestamp     NOT NULL,
+    `end_date`      timestamp     NOT NULL,
+    `product_id`    int(11)       NOT NULL,
+    `create_at`     timestamp     NOT NULL DEFAULT current_timestamp(),
+    `update_at`     timestamp     NOT NULL DEFAULT current_timestamp(),
+    `deleted_at`    timestamp              DEFAULT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+
 --
 -- Cấu trúc bảng cho bảng `carts`
 --
@@ -92,24 +112,6 @@ CREATE TABLE `carts`
 
 -- --------------------------------------------------------
 
---
--- Cấu trúc bảng cho bảng `coupons`
---
-
-CREATE TABLE `coupons`
-(
-    `id`            int(11)       NOT NULL,
-    `name`          varchar(50)   NOT NULL,
-    `discount_rate` decimal(5, 2) NOT NULL,
-    `start_date`    date          NOT NULL,
-    `end_date`      date          NOT NULL,
-    `product_id`    int(11)       NOT NULL,
-    `create_at`     timestamp     NOT NULL DEFAULT current_timestamp(),
-    `update_at`     timestamp     NOT NULL DEFAULT current_timestamp()
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
-
 -- --------------------------------------------------------
 
 --
@@ -122,8 +124,8 @@ CREATE TABLE `orders`
     `user_id`    int(11)                                                         NOT NULL,
     `payment_id` int(11)                                                         NOT NULL,
     `status`     enum ('pending','processing','shipped','delivered','cancelled') NOT NULL,
-    `create_at`  timestamp                                                       NOT NULL DEFAULT current_timestamp(),
-    `update_at`  timestamp                                                       NOT NULL DEFAULT current_timestamp()
+    `create_at`  timestamp NOT NULL DEFAULT current_timestamp(),
+    `update_at`  timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -229,43 +231,43 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT cho bảng `cart`
 --
 ALTER TABLE `carts`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `categories`
 --
 ALTER TABLE `categories`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `coupons`
 --
 ALTER TABLE `coupons`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `order_details`
 --
 ALTER TABLE `order_details`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
