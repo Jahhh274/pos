@@ -3,11 +3,11 @@ import type {
     GetSuppliersRequest,
     GetSuppliersResponse,
     RegisterRequest,
-    RegisterResponse
+    RegisterResponse, UpsertSupplierRequest, UpsertSupplierResponse
 } from "../interfaces/interfaces.ts";
 import {isValidEmail, isValidPassword} from "../utils/verification.ts";
 import {StatusCodes} from "http-status-codes";
-import {enrichUserRecords} from "./helpers.ts";
+import {enrichSupplierRecord, enrichUserRecord} from "./helpers.ts";
 import {generateJWTPayload} from "../utils/jwt.ts";
 import {Storage} from "../repository/storage.ts"
 
@@ -41,7 +41,7 @@ export class Handler {
             }
 
             // save information to database
-            const user = enrichUserRecords(registerData)
+            const user = enrichUserRecord(registerData)
             await this.storage.upsertUser(user)
             // create jwt
             const token = generateJWTPayload({
@@ -56,6 +56,32 @@ export class Handler {
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
             return
+        }
+    }
+
+    async upsertSupplier(request: Request, response: Response) {
+        try {
+            const requestData = request.body as UpsertSupplierRequest
+
+            if (!requestData.email && !requestData.phoneNumber) {
+                response.status(StatusCodes.BAD_REQUEST).json({
+                    message: "required at least phoneNumber or email"
+                })
+                return
+            }
+
+            const supplier = enrichSupplierRecord(requestData)
+            await this.storage.upsertSupplier(supplier)
+            const upsertResponse: UpsertSupplierResponse = {
+                code: StatusCodes.OK.valueOf(),
+                message: "Success",
+                data: {
+                    id: supplier.id,
+                }
+            }
+            response.status(StatusCodes.OK).json(upsertResponse)
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
         }
     }
 

@@ -1,13 +1,24 @@
-import type { RegisterRequest } from "../interfaces/interfaces.ts";
-import {User} from "../repository/entities.ts";
+import type {RegisterRequest, UpsertSupplierRequest} from "../interfaces/interfaces.ts";
+import {Supplier, User} from "../repository/entities.ts";
 import {hashSHA256} from "../utils/hashing.ts";
 
-export function enrichUserRecords(data: RegisterRequest): User {
+export function enrichUserRecord(data: RegisterRequest): User {
     const user = new User();
     user.username = data.username
     user.email = data.email
     user.password = hashSHA256(data.password)
     user.fullName = data.fullName
-    user.address = data.address
     return user;
+}
+
+export function enrichSupplierRecord(data: UpsertSupplierRequest): Supplier {
+    const supplier = new Supplier();
+    if (data.id) {
+        supplier.id = data.id
+    }
+    supplier.name = data.name
+    supplier.email = data.email
+    supplier.phoneNumber = data.phoneNumber
+    supplier.address = data.address
+    return supplier;
 }

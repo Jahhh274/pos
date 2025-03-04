@@ -121,7 +121,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Supplier"
+              type: object
+              properties:
+                id:
+                  type: number
+                  description: id of supplier
+                name:
+                  type: string
+                  description: name of supplier
+                phoneNumber:
+                  type: string
+                  description: phoneNumber of supplier, required at least phoneNumber or email
+                email:
+                  type: string
+                  description: email of supplier, required at least phoneNumber or email
+                address:
+                  type: string
+                  description: address of supplier
+              required:
+                - name
       responses:
         "200":
           description: "Successful response"

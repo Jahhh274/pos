@@ -11,7 +11,7 @@ CREATE TABLE `users`
     `full_name`    varchar(100),
     `address`      text,
     `phone_number` varchar(12),
-    `role`         varchar(50),
+    `role`         varchar(50)           DEFAULT 'customer',
     `created_at`   timestamp    NOT NULL DEFAULT current_timestamp(),
     `updated_at`   timestamp    NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB
@@ -24,14 +24,15 @@ CREATE TABLE `users`
 
 CREATE TABLE `suppliers`
 (
-    `id`           int          NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `name`         varchar(50)  NOT NULL,
-    `phone_number` varchar(12)  NOT NULL,
-    `email`        varchar(100) NOT NULL,
-    `address`      text         NOT NULL,
-    `created_at`   timestamp    NOT NULL DEFAULT current_timestamp(),
-    `updated_at`   timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `deleted_at`   timestamp             DEFAULT NULL
+    `id`           int         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`         varchar(50) NOT NULL UNIQUE,
+    `phone_number` varchar(12),
+    `email`        varchar(100),
+    `address`      text        NOT NULL,
+    `created_at`   timestamp   NOT NULL DEFAULT current_timestamp(),
+    `updated_at`   timestamp   NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `deleted_at`   timestamp            DEFAULT NULL,
+    FULLTEXT (`name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -47,7 +48,8 @@ CREATE TABLE `categories`
     `description` text        NOT NULL,
     `created_at`  timestamp   NOT NULL DEFAULT current_timestamp(),
     `updated_at`  timestamp   NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `deleted_at`  timestamp            DEFAULT NULL
+    `deleted_at`  timestamp            DEFAULT NULL,
+    FULLTEXT (`name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -69,10 +71,11 @@ CREATE TABLE `products`
     `create_at`   timestamp      NOT NULL DEFAULT current_timestamp(),
     `update_at`   timestamp      NOT NULL DEFAULT current_timestamp(),
     `deleted_at`  timestamp               DEFAULT NULL,
-    INDEX         `idx_category_id` (`category_id`),
-    INDEX         `idx_supplier_id` (`supplier_id`),
+    INDEX `idx_category_id` (`category_id`),
+    INDEX `idx_supplier_id` (`supplier_id`),
+    FULLTEXT (`name`),
     CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `fk_products_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_products_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -93,8 +96,9 @@ CREATE TABLE `coupons`
     `create_at`     timestamp     NOT NULL DEFAULT current_timestamp(),
     `update_at`     timestamp     NOT NULL DEFAULT current_timestamp(),
     `deleted_at`    timestamp              DEFAULT NULL,
-    INDEX           `idx_product_id` (`product_id`),
-    CONSTRAINT `fk_coupons_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    INDEX `idx_product_id` (`product_id`),
+    FULLTEXT (`name`),
+    CONSTRAINT `fk_coupons_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -130,8 +134,8 @@ CREATE TABLE `orders`
     `user_id`    int(11)                                                         NOT NULL,
     `payment_id` int(11)                                                         NOT NULL,
     `status`     enum ('pending','processing','shipped','delivered','cancelled') NOT NULL,
-    `create_at`  timestamp NOT NULL DEFAULT current_timestamp(),
-    `update_at`  timestamp NOT NULL DEFAULT current_timestamp()
+    `create_at`  timestamp                                                       NOT NULL DEFAULT current_timestamp(),
+    `update_at`  timestamp                                                       NOT NULL DEFAULT current_timestamp()
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
@@ -212,37 +216,37 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT cho bảng `cart`
 --
 ALTER TABLE `carts`
-    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `coupons`
 --
 ALTER TABLE `coupons`
-    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `order_details`
 --
 ALTER TABLE `order_details`
-    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Các ràng buộc cho bảng `cart`

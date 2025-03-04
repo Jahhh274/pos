@@ -15,13 +15,17 @@ export class Storage {
         await this.users.save(user)
     }
 
+    public async upsertSupplier(supplier: Supplier) {
+        await this.suppliers.save(supplier)
+    }
+
     public async getSuppliers(filter: GetSuppliersFilter): Promise<Supplier[]> {
         let queryBuilder = this.suppliers.createQueryBuilder()
         if (filter.ids) {
             queryBuilder = queryBuilder.andWhereInIds(filter.ids)
         }
         if (filter.name) {
-            queryBuilder = queryBuilder.andWhere("name = :name", {name: filter.name})
+            queryBuilder = queryBuilder.andWhere("MATCH(name) AGAINST(:name IN BOOLEAN MODE)", {name: filter.name})
         }
         if (filter.page && filter.pageSize) {
             const offset = (filter.page - 1) * filter.pageSize

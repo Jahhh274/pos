@@ -16,6 +16,22 @@ export interface RegisterResponse {
     token: string,
 }
 
+export interface UpsertSupplierRequest {
+    id?: number,
+    name: string,
+    phoneNumber?: string,
+    email?: string,
+    address?: string,
+}
+
+export interface UpsertSupplierResponse {
+    code: number,
+    message: string,
+    data: {
+        id: number,
+    }
+}
+
 export interface GetSuppliersRequest {
     ids: number[],
     name?: string,
@@ -36,7 +52,7 @@ export interface GetSuppliersResponse {
 export interface Supplier {
     id: number,
     name: string,
-    phoneNumber: string,
-    email: string,
-    address: string,
+    phoneNumber?: string,
+    email?: string,
+    address?: string,
 }
