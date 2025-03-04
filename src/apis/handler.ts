@@ -1,5 +1,6 @@
 import type {Request, Response} from "express"
 import type {
+    DeleteSupplierParams, DeleteSupplierResponse,
     GetSuppliersRequest,
     GetSuppliersResponse,
     RegisterRequest,
@@ -95,7 +96,7 @@ export class Handler {
                 page: requestData.page,
                 pageSize: requestData.pageSize,
             })
-
+            console.log(suppliers)
             const getSuppliersResponse: GetSuppliersResponse = {
                 code: StatusCodes.OK.valueOf(),
                 message: "Success",
@@ -107,6 +108,20 @@ export class Handler {
             }
 
             response.status(StatusCodes.OK).json(getSuppliersResponse)
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
+        }
+    }
+
+    async deleteSupplier(request: Request<DeleteSupplierParams>, response: Response) {
+        try {
+            const supplierId = parseInt(request.params.supplierId)
+            await this.storage.softDeleteSupplier(supplierId)
+            const deleteResponse: DeleteSupplierResponse = {
+                code: StatusCodes.OK.valueOf(),
+                message: "Success",
+            }
+            response.status(StatusCodes.OK).json(deleteResponse)
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
         }

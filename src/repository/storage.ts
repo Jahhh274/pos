@@ -31,6 +31,10 @@ export class Storage {
             const offset = (filter.page - 1) * filter.pageSize
             queryBuilder = queryBuilder.limit(filter.pageSize).offset(offset)
         }
-        return await queryBuilder.execute()
+        return await queryBuilder.getMany()
+    }
+
+    public async softDeleteSupplier(supplierId: number) {
+        await this.suppliers.softDelete({"id": supplierId})
     }
 }

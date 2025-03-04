@@ -56,3 +56,12 @@ export interface Supplier {
     email?: string,
     address?: string,
 }
+
+export interface DeleteSupplierParams {
+    supplierId: string,
+}
+
+export interface DeleteSupplierResponse {
+    code: number,
+    message: string,
+}

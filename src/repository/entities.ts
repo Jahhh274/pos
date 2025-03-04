@@ -1,4 +1,4 @@
-import {Entity, BaseEntity, PrimaryGeneratedColumn, Column, UpdateDateColumn} from "typeorm"
+import {Entity, BaseEntity, PrimaryGeneratedColumn, Column, UpdateDateColumn, DeleteDateColumn} from "typeorm"
 
 @Entity({name: "users"})
 export class User extends BaseEntity {
@@ -55,4 +55,7 @@ export class Supplier extends BaseEntity {
 
     @UpdateDateColumn({ name: "updated_at", type: "timestamp", default: () => "current_timestamp", onUpdate: "current_timestamp" })
     updatedAt: Date;
+
+    @DeleteDateColumn({ name: "deleted_at", type: "timestamp", default: () => "current_timestamp" })
+    deletedAt?: Date;
 }
