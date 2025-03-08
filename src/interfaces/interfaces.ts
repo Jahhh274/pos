@@ -65,3 +65,19 @@ export interface DeleteSupplierResponse {
     code: number,
     message: string,
 }
+
+export interface UpsertCategoriesRequest {
+    id?: number,
+    name: string,
+    description?: string,
+}
+
+export interface UpsertCategoriesResponse {
+    code: number,
+    message: string,
+    data: {
+        id: number,
+    }
+}
+
+
