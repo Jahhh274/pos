@@ -59,3 +59,24 @@ export class Supplier extends BaseEntity {
     @DeleteDateColumn({ name: "deleted_at", type: "timestamp", default: () => "current_timestamp" })
     deletedAt?: Date;
 }
+
+@Entity({name: "categories"})
+export class Categories extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({name: "name", nullable: false})
+    name: string;
+
+    @Column({name: "description", nullable: false})
+    description?: string;
+
+    @Column({ name: "created_at", type: "timestamp", default: () => "current_timestamp" })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: "updated_at", type: "timestamp", default: () => "current_timestamp", onUpdate: "current_timestamp" })
+    updatedAt: Date;
+
+    @DeleteDateColumn({ name: "deleted_at", type: "timestamp", default: () => "current_timestamp" })
+    deletedAt?: Date;
+}

@@ -4,11 +4,11 @@ import type {
     GetSuppliersRequest,
     GetSuppliersResponse,
     RegisterRequest,
-    RegisterResponse, UpsertSupplierRequest, UpsertSupplierResponse
+    RegisterResponse, UpsertSupplierRequest, UpsertSupplierResponse, UpsertCategoriesRequest, UpsertCategoriesResponse
 } from "../interfaces/interfaces.ts";
 import {isValidEmail, isValidPassword} from "../utils/verification.ts";
 import {StatusCodes} from "http-status-codes";
-import {enrichSupplierRecord, enrichUserRecord} from "./helpers.ts";
+import {enrichSupplierRecord, enrichUserRecord, enrichCategoriesRecord} from "./helpers.ts";
 import {generateJWTPayload} from "../utils/jwt.ts";
 import {Storage} from "../repository/storage.ts"
 
@@ -122,6 +122,32 @@ export class Handler {
                 message: "Success",
             }
             response.status(StatusCodes.OK).json(deleteResponse)
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
+        }
+    }
+
+    async upsertCategories(request: Request, response: Response) {
+        try {
+            const requestData = request.body as UpsertCategoriesRequest
+
+            // if (!requestData.description) {
+            //     response.status(StatusCodes.BAD_REQUEST).json({
+            //         message: "required at least description"
+            //     })
+            //     return
+            // }
+
+            const categories = enrichCategoriesRecord(requestData)
+            await this.storage.upsertCategories(categories)
+            const upsertResponse: UpsertCategoriesResponse = {
+                code: StatusCodes.OK.valueOf(),
+                message: "Success",
+                data: {
+                    id: categories.id,
+                }
+            }
+            response.status(StatusCodes.OK).json(upsertResponse)
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
         }
