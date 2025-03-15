@@ -1,5 +1,6 @@
 import type {RegisterRequest, UpsertSupplierRequest} from "../interfaces/interfaces.ts";
-import {Supplier, User} from "../repository/entities.ts";
+import { Supplier } from "../models/supplier.ts";
+import {User} from "../models/user.ts";
 import {hashSHA256} from "../utils/hashing.ts";
 
 export function enrichUserRecord(data: RegisterRequest): User {

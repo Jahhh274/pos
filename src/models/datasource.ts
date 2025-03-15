@@ -1,7 +1,8 @@
 import { DataSource } from "typeorm";
 
 import { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST, MYSQL_PORT } from "../config/config.ts"
-import {Supplier, User} from "./entities.ts";
+import {User} from "./user.ts";
+import {Supplier} from "./supplier.ts";
 
 export const MySQLDataSource = new DataSource({
     type: "mysql",
@@ -14,6 +15,6 @@ export const MySQLDataSource = new DataSource({
     logging: false,
     entities: [
         User,
-        Supplier,
+        Supplier
     ],
 })

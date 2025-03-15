@@ -1,18 +1,19 @@
 import express from "express"
 import {createAuthRouter} from "./src/router/authentication.ts";
-import {MySQLDataSource} from "./src/repository/datasource.ts";
+import {MySQLDataSource} from "./src/models/datasource.ts";
 import {HTTP_PORT} from "./src/config/config.ts";
-import {Handler} from "./src/apis/handler.ts";
-import {Storage} from "./src/repository/storage.ts"
+import {AuthController} from "./src/controller/authController.ts";
+import {SupplierController} from "./src/controller/supplierController.ts";
 import {createSuppliersRouter} from "./src/router/suppliers.ts";
 
 const application = express();
 
 const datasource = await MySQLDataSource.initialize()
-const handler = new Handler(new Storage(datasource))
+const authController = new AuthController(datasource)
+const supplierController = new SupplierController(datasource)
 application.use(express.json())
-application.use("/", createAuthRouter(handler))
-application.use("/suppliers", createSuppliersRouter(handler))
+application.use("/", createAuthRouter(authController))
+application.use("/", createSuppliersRouter(supplierController))
 
 application.listen(HTTP_PORT, () => {
     console.log(`Pos serving at port ${HTTP_PORT}`)

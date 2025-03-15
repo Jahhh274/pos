@@ -3,61 +3,19 @@ import type {
     DeleteSupplierParams, DeleteSupplierResponse,
     GetSuppliersRequest,
     GetSuppliersResponse,
-    RegisterRequest,
-    RegisterResponse, UpsertSupplierRequest, UpsertSupplierResponse
+    UpsertSupplierRequest, UpsertSupplierResponse
 } from "../interfaces/interfaces.ts";
-import {isValidEmail, isValidPassword} from "../utils/verification.ts";
 import {StatusCodes} from "http-status-codes";
-import {enrichSupplierRecord, enrichUserRecord} from "./helpers.ts";
-import {generateJWTPayload} from "../utils/jwt.ts";
-import {Storage} from "../repository/storage.ts"
+import {enrichSupplierRecord} from "./helpers.ts";
 
-export class Handler {
-    private storage: Storage
+import type {DataSource, Repository} from "typeorm";
+import {Supplier} from "../models/supplier.ts";
 
-    constructor(storage: Storage) {
-        this.storage = storage
-    }
+export class SupplierController {
+    private suppliersRepository: Repository<Supplier>
 
-    async register(request: Request, response: Response) {
-        try {
-            const registerData = request.body as RegisterRequest
-
-            // verify email
-            if (!isValidEmail(registerData.email)) {
-                response.status(StatusCodes.BAD_REQUEST).json({message: "email is invalid"})
-                return
-            }
-
-            // verify password constraints
-            if (!isValidPassword(registerData.password)) {
-                response.status(StatusCodes.BAD_REQUEST).json({message: "password is invalid"})
-                return
-            }
-
-            // verify username
-            if (registerData.username.length == 0) {
-                response.status(StatusCodes.BAD_REQUEST).json({message: "username is invalid"})
-                return
-            }
-
-            // save information to database
-            const user = enrichUserRecord(registerData)
-            await this.storage.upsertUser(user)
-            // create jwt
-            const token = generateJWTPayload({
-                id: user.id,
-                role: user.role
-            })
-            const registerResponse: RegisterResponse = {
-                token: token,
-            }
-            response.status(StatusCodes.OK).json(registerResponse)
-            return
-        } catch (error) {
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
-            return
-        }
+    constructor(datasource: DataSource) {
+        this.suppliersRepository = datasource.getRepository(Supplier)
     }
 
     async upsertSupplier(request: Request, response: Response) {
@@ -72,7 +30,7 @@ export class Handler {
             }
 
             const supplier = enrichSupplierRecord(requestData)
-            await this.storage.upsertSupplier(supplier)
+            await this.suppliersRepository.save(supplier)
             const upsertResponse: UpsertSupplierResponse = {
                 code: StatusCodes.OK.valueOf(),
                 message: "Success",
@@ -90,13 +48,22 @@ export class Handler {
         try {
             const requestData = request.body as GetSuppliersRequest
 
-            const suppliers = await this.storage.getSuppliers({
-                ids: requestData.ids,
-                name: requestData.name,
-                page: requestData.page,
-                pageSize: requestData.pageSize,
-            })
-            console.log(suppliers)
+            // create query builder
+            let queryBuilder = this.suppliersRepository.createQueryBuilder()
+
+            if (requestData.ids) {
+                queryBuilder = queryBuilder.andWhereInIds(requestData.ids)
+            }
+            if (requestData.name) {
+                queryBuilder = queryBuilder.andWhere("MATCH(name) AGAINST(:name IN BOOLEAN MODE)", {name: requestData.name})
+            }
+            if (requestData.page && requestData.pageSize) {
+                const offset = (requestData.page - 1) * requestData.pageSize
+                queryBuilder = queryBuilder.limit(requestData.pageSize).offset(offset)
+            }
+
+            const suppliers = await queryBuilder.getMany()
+
             const getSuppliersResponse: GetSuppliersResponse = {
                 code: StatusCodes.OK.valueOf(),
                 message: "Success",
@@ -116,7 +83,7 @@ export class Handler {
     async deleteSupplier(request: Request<DeleteSupplierParams>, response: Response) {
         try {
             const supplierId = parseInt(request.params.supplierId)
-            await this.storage.softDeleteSupplier(supplierId)
+            await this.suppliersRepository.softDelete({"id": supplierId})
             const deleteResponse: DeleteSupplierResponse = {
                 code: StatusCodes.OK.valueOf(),
                 message: "Success",
@@ -126,4 +93,5 @@ export class Handler {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: `error: ${error}`})
         }
     }
+
 }

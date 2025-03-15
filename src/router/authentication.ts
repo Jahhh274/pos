@@ -1,8 +1,8 @@
 import {Router} from "express";
-import {Handler} from "../apis/handler.ts";
+import {AuthController} from "../controller/authController.ts";
 
-export function createAuthRouter(handler: Handler): Router {
+export function createAuthRouter(controller: AuthController): Router {
     const router = Router()
-    router.post("/register", (req, res) => handler.register(req, res))
+    router.post("/register", (req, res) => controller.register(req, res))
     return router
 }
