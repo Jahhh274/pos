@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {SupplierController} from "../controller/supplierController.ts";
+import {SupplierController} from "../controllers/supplierController.ts";
 
 export function createSuppliersRouter(controller: SupplierController): Router {
     const router = Router()

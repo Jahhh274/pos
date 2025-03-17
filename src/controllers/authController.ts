@@ -1,17 +1,17 @@
-import { DataSource, Repository} from "typeorm";
-import {User} from "../models/user.ts";
+import { DataSource } from "typeorm";
 import type {Request, Response} from "express";
 import type {RegisterRequest, RegisterResponse} from "../interfaces/interfaces.ts";
 import {isValidEmail, isValidPassword} from "../utils/verification.ts";
 import {StatusCodes} from "http-status-codes";
 import {enrichUserRecord} from "./helpers.ts";
 import {generateJWTPayload} from "../utils/jwt.ts";
+import {UserService} from "../services/userService.ts";
 
 export class AuthController {
-    private usersRepository: Repository<User>
+    private userService: UserService
 
     constructor(datasource: DataSource) {
-        this.usersRepository = datasource.getRepository(User)
+        this.userService = new UserService(datasource)
     }
 
     async register(request: Request, response: Response) {
@@ -38,7 +38,7 @@ export class AuthController {
 
             // save information to database
             const user = enrichUserRecord(registerData)
-            await this.usersRepository.save(user)
+            await this.userService.upsertUser(user)
             // create jwt
             const token = generateJWTPayload({
                 id: user.id,

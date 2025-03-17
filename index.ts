@@ -2,8 +2,8 @@ import express from "express"
 import {createAuthRouter} from "./src/router/authentication.ts";
 import {MySQLDataSource} from "./src/models/datasource.ts";
 import {HTTP_PORT} from "./src/config/config.ts";
-import {AuthController} from "./src/controller/authController.ts";
-import {SupplierController} from "./src/controller/supplierController.ts";
+import {AuthController} from "./src/controllers/authController.ts";
+import {SupplierController} from "./src/controllers/supplierController.ts";
 import {createSuppliersRouter} from "./src/router/suppliers.ts";
 
 const application = express();

@@ -1,4 +1,12 @@
-import {Entity, BaseEntity, PrimaryGeneratedColumn, Column, UpdateDateColumn} from "typeorm"
+import {
+    Entity,
+    BaseEntity,
+    PrimaryGeneratedColumn,
+    Column,
+    UpdateDateColumn,
+    type Repository,
+    type DataSource
+} from "typeorm"
 
 @Entity({name: "users"})
 export class User extends BaseEntity {
@@ -31,4 +39,16 @@ export class User extends BaseEntity {
 
     @UpdateDateColumn({ name: "updated_at", type: "timestamp", default: () => "current_timestamp", onUpdate: "current_timestamp" })
     updatedAt: Date;
+}
+
+export class UserRepository {
+    private repository: Repository<User>
+
+    constructor(datasource: DataSource) {
+        this.repository = datasource.getRepository(User)
+    }
+
+    async upsertUser(user: User) {
+        await this.repository.save(user)
+    }
 }

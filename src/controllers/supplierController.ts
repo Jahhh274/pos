@@ -8,14 +8,14 @@ import type {
 import {StatusCodes} from "http-status-codes";
 import {enrichSupplierRecord} from "./helpers.ts";
 
-import type {DataSource, Repository} from "typeorm";
-import {Supplier} from "../models/supplier.ts";
+import type {DataSource} from "typeorm";
+import {SupplierService} from "../services/supplierService.ts";
 
 export class SupplierController {
-    private suppliersRepository: Repository<Supplier>
+    private supplierService: SupplierService
 
     constructor(datasource: DataSource) {
-        this.suppliersRepository = datasource.getRepository(Supplier)
+        this.supplierService = new SupplierService(datasource)
     }
 
     async upsertSupplier(request: Request, response: Response) {
@@ -30,7 +30,7 @@ export class SupplierController {
             }
 
             const supplier = enrichSupplierRecord(requestData)
-            await this.suppliersRepository.save(supplier)
+            await this.supplierService.upsertSupplier(supplier)
             const upsertResponse: UpsertSupplierResponse = {
                 code: StatusCodes.OK.valueOf(),
                 message: "Success",
@@ -48,21 +48,7 @@ export class SupplierController {
         try {
             const requestData = request.body as GetSuppliersRequest
 
-            // create query builder
-            let queryBuilder = this.suppliersRepository.createQueryBuilder()
-
-            if (requestData.ids) {
-                queryBuilder = queryBuilder.andWhereInIds(requestData.ids)
-            }
-            if (requestData.name) {
-                queryBuilder = queryBuilder.andWhere("MATCH(name) AGAINST(:name IN BOOLEAN MODE)", {name: requestData.name})
-            }
-            if (requestData.page && requestData.pageSize) {
-                const offset = (requestData.page - 1) * requestData.pageSize
-                queryBuilder = queryBuilder.limit(requestData.pageSize).offset(offset)
-            }
-
-            const suppliers = await queryBuilder.getMany()
+            const suppliers = await this.supplierService.getSuppliers(requestData)
 
             const getSuppliersResponse: GetSuppliersResponse = {
                 code: StatusCodes.OK.valueOf(),
@@ -83,7 +69,7 @@ export class SupplierController {
     async deleteSupplier(request: Request<DeleteSupplierParams>, response: Response) {
         try {
             const supplierId = parseInt(request.params.supplierId)
-            await this.suppliersRepository.softDelete({"id": supplierId})
+            await this.supplierService.softDeleteSupplierById(supplierId)
             const deleteResponse: DeleteSupplierResponse = {
                 code: StatusCodes.OK.valueOf(),
                 message: "Success",
