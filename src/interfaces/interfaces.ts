@@ -1,3 +1,5 @@
+import {Column, UpdateDateColumn} from "typeorm";
+
 export interface JWTMetadata {
     id: number,
     role: string,
@@ -64,4 +66,25 @@ export interface DeleteSupplierParams {
 export interface DeleteSupplierResponse {
     code: number,
     message: string,
+}
+
+export interface GetUsersRequest {
+
+}
+
+export interface GetUsersResponse {
+    users: User[],
+}
+
+export interface User {
+    id: number;
+    username: string;
+    password: string;
+    email: string;
+    fullName?: string;
+    address?: string;
+    phoneNumber?: string;
+    role: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
