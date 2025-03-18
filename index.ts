@@ -1,18 +1,18 @@
 import express from "express"
-import {createAuthRouter} from "./src/router/authentication.ts";
+// import {createAuthRouter} from "./src/router/authentication.ts";
 import {MySQLDataSource} from "./src/models/datasource.ts";
 import {HTTP_PORT} from "./src/config/config.ts";
-import {AuthController} from "./src/controllers/authController.ts";
+// import {AuthController} from "./src/controllers/authController.ts";
 import {SupplierController} from "./src/controllers/supplierController.ts";
 import {createSuppliersRouter} from "./src/router/suppliers.ts";
 
 const application = express();
 
 const datasource = await MySQLDataSource.initialize()
-const authController = new AuthController(datasource)
+// const authController = new AuthController(datasource)
 const supplierController = new SupplierController(datasource)
 application.use(express.json())
-application.use("/", createAuthRouter(authController))
+// application.use("/", createAuthRouter(authController))
 application.use("/", createSuppliersRouter(supplierController))
 
 application.listen(HTTP_PORT, () => {
